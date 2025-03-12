@@ -5,17 +5,34 @@ export const getAllContacts = async () => {
 };
 
 export const getContactById = async (contactId) => {
-  return await Contact.findById(contactId);
+  const contact = await Contact.findById(contactId);
+  return contact;
 };
 
 export const createContact = async (contactData) => {
-  return await Contact.create(contactData);
+  const newContact = new Contact(contactData);
+  return await newContact.save();
 };
 
-export const updateContact = async (contactId, contactData) => {
-  return await Contact.findByIdAndUpdate(contactId, contactData, { new: true });
+export const patchContact = async (contactId, updateData) => {
+  const patchedContact = await Contact.findByIdAndUpdate(
+    contactId,
+    updateData,
+    {
+      new: true,
+      runValidators: true,
+    },
+  );
+
+  return patchedContact;
 };
 
 export const deleteContact = async (contactId) => {
-  return await Contact.findByIdAndDelete(contactId);
+  const deletedContact = await Contact.findByIdAndDelete(contactId);
+
+  return deletedContact;
+};
+
+export const getContactByPhoneNumber = async (phoneNumber) => {
+  return Contact.findOne({ phoneNumber });
 };
