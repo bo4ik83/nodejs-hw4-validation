@@ -1,4 +1,4 @@
-import 'dotenv/config';
+import 'dotenv/config'; // добавлено
 import { initMongoConnection } from './db/initMongoConnection.js';
 import { setupServer } from './server.js';
 
