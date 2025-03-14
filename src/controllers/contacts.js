@@ -12,13 +12,17 @@ import { parseSortParams } from '../utils/parsSortParams.js';
 export const getContactsController = async (req, res) => {
   const { page, perPage } = parsePaginationParams(req.query);
   const { sortBy, sortOrder } = parseSortParams(req.query);
+  const { type, isFavourite } = req.query;
 
   const contacts = await getAllContacts({
     page,
     perPage,
     sortBy,
     sortOrder,
+    type,
+    isFavourite,
   });
+
   res.status(200).json({
     status: 200,
     message: 'Successfully found contacts!',
@@ -42,7 +46,7 @@ export const getContactByIdController = async (req, res) => {
 };
 
 export const createContactController = async (req, res) => {
-  const { name, phoneNumber, email, isFavorite, contactType } = req.body;
+  const { name, phoneNumber, email, isFavourite, contactType } = req.body;
 
   if (!name || !phoneNumber || !contactType) {
     throw createHttpError(
@@ -55,7 +59,7 @@ export const createContactController = async (req, res) => {
     name,
     phoneNumber,
     email,
-    isFavorite,
+    isFavourite,
     contactType,
   });
 

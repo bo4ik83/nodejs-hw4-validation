@@ -1,11 +1,22 @@
 import Contact from '../db/models/contact.js';
 
-export const getAllContacts = async ({ page, perPage, sortBy, sortOrder }) => {
+export const getAllContacts = async ({
+  page,
+  perPage,
+  sortBy,
+  sortOrder,
+  type,
+  isFavourite,
+}) => {
   const skip = page > 0 ? (page - 1) * perPage : 0;
 
+  const filter = {};
+  if (type) filter.contactType = type;
+  if (isFavourite !== undefined) filter.isFavourite = isFavourite === 'true';
+
   const [total, contacts] = await Promise.all([
-    Contact.countDocuments(),
-    Contact.find({})
+    Contact.countDocuments(filter),
+    Contact.find(filter)
       .sort({ [sortBy]: sortOrder })
       .skip(skip)
       .limit(perPage),
@@ -14,8 +25,8 @@ export const getAllContacts = async ({ page, perPage, sortBy, sortOrder }) => {
   const totalPages = Math.ceil(total / perPage);
 
   return {
-    contacts,
-    total,
+    data: contacts,
+    totalItems: total,
     page,
     perPage,
     totalPages,
